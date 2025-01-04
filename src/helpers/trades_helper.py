@@ -32,7 +32,7 @@ class SubmitOrder:
     
     def add_to_trade_history(self, contract_address, buy_amt):
         token_details  = self.query_api.get_details(contract_address)
-        if isinstance(token_details, str):
+        if isinstance(token_details, int):
             return token_details
         sol_price = self.query_api.get_details()
 
@@ -50,11 +50,11 @@ class SubmitOrder:
 
     def buy_coin(self, contract_address, buy_amt):
         if contract_address == '':
-            return '998'
+            return 998
         if buy_amt <= 0:
-            return '999'
+            return 999
         data = self.add_to_trade_history(contract_address, buy_amt)
-        if isinstance(data, str):
+        if isinstance(data, int):
             return data
         df = fetch_data(f"SELECT * FROM open_positions WHERE contract_address = '{contract_address}'")
 
