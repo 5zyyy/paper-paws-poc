@@ -1,12 +1,22 @@
 from datetime import datetime
+import streamlit as st
 from helpers.settings_helper import SettingsConfiguration
 from helpers.api_helper import QueryAPI
 from helpers.database_helper import insert_to_db, fetch_data, delete_open_position
 
+def get_open_token_contract():
+    df = fetch_data("SELECT * FROM open_positions")
+    token_contract_tuple = tuple(f"{token} - {contract}" for token, contract in zip(df['token'], df['contract_address']))
+    return token_contract_tuple
+
 class SubmitOrder:
     def __init__(self):
         self.settings = SettingsConfiguration('settings.yaml')
-        self.api_key = self.settings.get_settings()['api_key']
+        self.settings_data = self.settings.get_settings()
+        self.api_key = self.settings_data['api_key']
+        self.balance = self.settings_data['balance']
+        self.priority_buy_fee = self.settings_data['priority_buy_fee']
+        self.priority_sell_fee = self.settings_data['priority_sell_fee']
         self.query_api = QueryAPI(self.api_key)
 
     def calulcate_token_amt(self, total, token_price, sol_price):
@@ -55,7 +65,10 @@ class SubmitOrder:
             return 'No contract address entered!'
         if buy_amt <= 0:
             return 'Buy amount must be more than 0 sol!'
-        data = self.add_to_trade_history(contract_address, buy_amt)
+        if self.balance - buy_amt < 0:
+            return 'Insufficient balance!'
+        actual_buy_amt = buy_amt - self.priority_buy_fee
+        data = self.add_to_trade_history(contract_address, actual_buy_amt)
         if isinstance(data, str):
             return data
         df = fetch_data(f"SELECT * FROM open_positions WHERE contract_address = '{contract_address}'")
@@ -63,10 +76,11 @@ class SubmitOrder:
         if not df.empty:
             date = data[0]
             time = data[1]
+            token = df['token'].iloc[0]
             avg_mc = float(self.calculate_avg_mc(contract_address))
-            initial_investment = float(df['initial_investment'] + buy_amt)
-            remaining = float(df['remaining'] + buy_amt)
-            data = (date, time, df['symbol'].iloc[0], df['token'].iloc[0], df['contract_address'].iloc[0], avg_mc, initial_investment, remaining, float(df['sold'].iloc[0]))
+            initial_investment = float(df['initial_investment'] + actual_buy_amt)
+            remaining = float(df['remaining'] + actual_buy_amt)
+            data = (date, time, df['symbol'].iloc[0], token, df['contract_address'].iloc[0], avg_mc, initial_investment, remaining, float(df['sold'].iloc[0]))
             delete_open_position(contract_address)
             insert_to_db('open_positions', data)
         
@@ -80,3 +94,5 @@ class SubmitOrder:
             sold = 0
             data = (date, time, symbol, token, contract_address, avg_mc, initial_investment, remaining, sold)
             insert_to_db('open_positions', data)
+
+        self.settings.update_settings('balance', self.balance - buy_amt, rerun=False)

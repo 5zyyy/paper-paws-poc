@@ -11,7 +11,7 @@ class SettingsConfiguration:
     def get_settings(self):
         return self.settings_data
         
-    def update_settings(self, key, value):
+    def update_settings(self, key, value, rerun=True):
         path = self.path
         try:
             with open(path, 'r') as file:
@@ -21,8 +21,9 @@ class SettingsConfiguration:
 
             with open(path, 'w') as file:
                 yaml.dump(data, file)
-
-            st.rerun()
+            
+            if rerun:
+                st.rerun()
 
         except Exception as e:
             print(f"Error updating YAML: {e}")
