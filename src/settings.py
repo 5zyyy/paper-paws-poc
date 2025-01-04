@@ -39,7 +39,7 @@ with st.container(border=True):
             if submitted:
                 settings.update_settings('sell_fee', new_sellfee)
 
-    st.subheader(f"Coin Gecko API Key:", anchor=False)
+    st.subheader(f"BitQuery API Key:", anchor=False)
     st.code(api_key_text, language="plaintext")
     with st.popover('Edit'):
         with st.form('apikey_edit', border=False):

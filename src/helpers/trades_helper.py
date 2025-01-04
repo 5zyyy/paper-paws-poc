@@ -31,17 +31,19 @@ class SubmitOrder:
         return avg_mc
     
     def add_to_trade_history(self, contract_address, buy_amt):
-        token_details  = self.query_api.get_details(contract_address)
-        if isinstance(token_details, int):
+        token_details  = self.query_api.token_data(contract_address)
+        if isinstance(token_details, str):
             return token_details
-        sol_price = self.query_api.get_details()
+        sol_price = self.query_api.get_sol_price()
+        if isinstance(sol_price, str):
+            return sol_price
 
         date = datetime.now().strftime("%Y-%m-%d")
         time = datetime.now().strftime("%H:%M:%S")
         symbol = token_details['symbol']
         name = token_details['name']
-        mc = token_details['market_data']['market_cap']['usd']
-        token_price = token_details['market_data']['current_price']['usd']
+        mc = token_details['market_cap']
+        token_price = token_details['token_price']
         token_amt = self.calulcate_token_amt(buy_amt, token_price, sol_price['solana']['usd'])
 
         data = (date, time, symbol, name, contract_address, 'buy', mc, token_price, token_amt, buy_amt)
@@ -50,11 +52,11 @@ class SubmitOrder:
 
     def buy_coin(self, contract_address, buy_amt):
         if contract_address == '':
-            return 998
+            return 'No contract address entered!'
         if buy_amt <= 0:
-            return 999
+            return 'Buy amount must be more than 0 sol!'
         data = self.add_to_trade_history(contract_address, buy_amt)
-        if isinstance(data, int):
+        if isinstance(data, str):
             return data
         df = fetch_data(f"SELECT * FROM open_positions WHERE contract_address = '{contract_address}'")
 
