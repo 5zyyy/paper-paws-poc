@@ -25,7 +25,6 @@ class QueryAPI:
             where: {
                 Trade: {
                 Buy: { Currency: { MintAddress: { is: $mintAddress } } }
-                Dex: { ProtocolName: { is: "pump" } }
                 }
                 Transaction: { Result: { Success: true } }
             }
