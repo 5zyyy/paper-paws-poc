@@ -22,19 +22,19 @@ if os.path.exists('trades.ddb'):
             if submit_buy:
                 error = order.buy_coin(ca_input, buy_sol_amt)
                 if error is not None:
-                    if error == 998:
-                        error_msg = 'No contract address entered!'
-                    elif error == 999:
-                        error_msg = 'Buy amount must be more than 0 sol!'
-                    elif error == 401 or error == 10002:
-                        error_msg = f"API key missing or invalid (Status Code: {error})"
-                    elif error == 429:
-                        error_msg = f"Too many requests! Please try again later (Status Code: {error})"
-                    elif error == 404:
-                        error_msg = f"Coin not found! Check the CA (Status Code: {error})"
-                    else:
-                        error_msg = f"Error encountered! (Status Code: {error})"
-                    st.toast(f"{error_msg}", icon='🚨')
+                    # if error == 998:
+                    #     error_msg = 'No contract address entered!'
+                    # elif error == 999:
+                    #     error_msg = 'Buy amount must be more than 0 sol!'
+                    # elif error == 401 or error == 10002:
+                    #     error_msg = f"API key missing or invalid (Status Code: {error})"
+                    # elif error == 429:
+                    #     error_msg = f"Too many requests! Please try again later (Status Code: {error})"
+                    # elif error == 404:
+                    #     error_msg = f"Coin not found! Check the CA (Status Code: {error})"
+                    # else:
+                    #     error_msg = f"Error encountered! (Status Code: {error})"
+                    st.toast(f"{error}", icon='🚨')
                 else:
                     st.toast("Buy order submitted!", icon='✅')
                     time.sleep(1)
