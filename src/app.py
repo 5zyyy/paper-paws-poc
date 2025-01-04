@@ -10,8 +10,8 @@ if not os.path.exists('trades.ddb'):
 settings_file = 'settings.yaml'
 settings = {
     'balance': 3,
-    'buy_fee': 0.01,
-    'sell_fee': 0.01,
+    'priority_buy_fee': 0.01,
+    'priority_sell_fee': 0.01,
     'api_key': ''
 }
 
