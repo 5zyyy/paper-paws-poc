@@ -23,21 +23,21 @@ with st.container(border=True):
             if submitted:
                 settings.update_settings('balance', new_balance)
 
-    st.subheader(f"Buy Fee: {settings_data['buy_fee']} sol", anchor=False)
+    st.subheader(f"Priority Buy Fee: {settings_data['priority_buy_fee']} sol", anchor=False)
     with st.popover('Edit'):
         with st.form('buyfee_edit', border=False):
             new_buyfee = st.number_input('Edit buy fee')
             submitted = st.form_submit_button("Submit")
             if submitted:
-                settings.update_settings('buy_fee', new_buyfee)
+                settings.update_settings('priority_buy_fee', new_buyfee)
 
-    st.subheader(f"Sell Fee: {settings_data['sell_fee']} sol", anchor=False)
+    st.subheader(f"Priority Sell Fee: {settings_data['priority_sell_fee']} sol", anchor=False)
     with st.popover('Edit'):
         with st.form('sellfee_edit', border=False):
             new_sellfee = st.number_input('Edit sell fee')
             submitted = st.form_submit_button("Submit")
             if submitted:
-                settings.update_settings('sell_fee', new_sellfee)
+                settings.update_settings('priority_sell_fee', new_sellfee)
 
     st.subheader(f"BitQuery API Key:", anchor=False)
     st.code(api_key_text, language="plaintext")
