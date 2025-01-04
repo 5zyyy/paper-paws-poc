@@ -1,6 +1,7 @@
 import streamlit as st
 import os
 from helpers.helpers import write_yaml
+from helpers.settings_helper import SettingsConfiguration
 
 st.set_page_config(layout="wide")
 
@@ -20,7 +21,12 @@ if not os.path.exists(settings_file):
     write_yaml(settings_file, settings)
     st.toast("Settings file created!", icon='✅')
 
+settings = SettingsConfiguration('settings.yaml')
+balance = settings.get_settings()['balance']
+
 with st.sidebar:
+    st.title("💰 Balance")
+    st.code(f"{balance} sol")
     st.title("🐾 Paper Paws", anchor=False)
     st.write("Version: 1.0.0")
     st.write(
