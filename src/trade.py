@@ -21,7 +21,6 @@ if os.path.exists('trades.ddb'):
             submit_buy = st.form_submit_button("BUY")
             if submit_buy:
                 error = order.buy_coin(ca_input, buy_sol_amt)
-                print(error)
                 if error is not None:
                     if error == 998:
                         error_msg = 'No contract address entered!'
