@@ -25,10 +25,13 @@ def create_db():
                 symbol TEXT,
                 token TEXT,
                 contract_address TEXT,
+                market_cap REAL,
                 average_market_cap REAL,
                 initial_investment REAL,
                 remaining REAL,
-                sold REAL
+                sold REAL,
+                unrealized_profit REAL,
+                roi REAL 
             );
         ''')
 
@@ -40,16 +43,16 @@ def insert_to_db(table, data):
         if table == 'transactions':
             query = f'''
                 INSERT INTO {table} (date, time, symbol, token, contract_address, action, market_cap, token_price, token_amt, total)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             '''
 
         elif table == 'open_positions':
             query = f'''
-                INSERT INTO {table} (date, time, symbol, token, contract_address, average_market_cap, initial_investment, remaining, sold)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                INSERT INTO {table} (date, time, symbol, token, contract_address, market_cap, average_market_cap, initial_investment, remaining, sold, unrealized_profit, roi)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             '''
 
-        con.execute(query, data)
+        con.executemany(query, data)
 
 def fetch_data(query):
     with duckdb.connect('trades.ddb') as con:
@@ -58,4 +61,17 @@ def fetch_data(query):
 
 def delete_open_position(contract_address):
     with duckdb.connect('trades.ddb') as con:
-        con.execute(f"DELETE FROM open_positions WHERE contract_address = '{contract_address}'")
+        contract_address_str = ""
+        if isinstance(contract_address, list):
+            for index, ca in enumerate(contract_address):
+                contract_address_str += f"'{ca}'"
+                if index != len(contract_address) - 1:
+                    contract_address_str += ", "
+
+        elif isinstance(contract_address, str):
+            contract_address_str = f"'{contract_address}'"
+
+        else:
+            return "ERROR: contract_address is neither a list nor a string"
+        
+        con.execute(f"DELETE FROM open_positions WHERE contract_address IN ({contract_address_str})")

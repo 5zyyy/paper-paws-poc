@@ -40,8 +40,17 @@ class SubmitOrder:
 
         return avg_mc
     
+    def calculate_changes(self, mc, amc, remaining):
+        percentage_change = (mc - amc)/amc
+        sol_difference = remaining * percentage_change
+        return sol_difference
+
+    def calculate_roi(self, initial_investment, remaining, sold):
+        roi_percentage = (((remaining + sold) - initial_investment)/initial_investment) * 100
+        return roi_percentage
+    
     def add_to_trade_history(self, contract_address, buy_amt):
-        token_details  = self.query_api.token_data(contract_address)
+        token_details = self.query_api.token_data(contract_address)
         if isinstance(token_details, str):
             return token_details
         sol_price = self.query_api.get_sol_price()
@@ -56,9 +65,37 @@ class SubmitOrder:
         token_price = token_details['token_price']
         token_amt = self.calulcate_token_amt(buy_amt, token_price, sol_price['solana']['usd'])
 
-        data = (date, time, symbol, name, contract_address, 'buy', mc, token_price, token_amt, buy_amt)
+        data =[[date, time, symbol, name, contract_address, 'buy', mc, token_price, token_amt, buy_amt]]
         insert_to_db('transactions', data)
         return data
+    
+    def refresh_token(self):
+        df = fetch_data("SELECT date, time, symbol, token, contract_address, average_market_cap, initial_investment, remaining, sold FROM open_positions")
+        if df.empty:
+            return "No open positions to refresh!"
+
+        ca_to_refresh = []
+        for ca in df['contract_address']:
+            ca_to_refresh.append(ca)
+
+        all_token_details = self.query_api.get_multiple_token_data(ca_to_refresh)
+
+        to_insert = []
+        for _, row in df.iterrows():
+            ca = row['contract_address']
+            mc = all_token_details[ca]['market_cap']
+            price_change = self.calculate_changes(mc, row['average_market_cap'], row['remaining'])
+            print("remaining before change", row['remaining']) #debug
+            print("unreal profit", price_change)#debug
+            remaining = row['remaining'] + price_change
+            print("remaining after change", remaining) #debug
+            unrealized_profit = remaining - (row['initial_investment'] - row['sold'])
+            roi = self.calculate_roi(row['initial_investment'], remaining, row['sold'])
+            data = [row['date'], row['time'], row['symbol'], row['token'], row['contract_address'], mc, row['average_market_cap'], row['initial_investment'], remaining, row['sold'], unrealized_profit, roi]
+            to_insert.append(data)
+
+        delete_open_position(ca_to_refresh)
+        insert_to_db('open_positions', to_insert)
 
     def buy_coin(self, contract_address, buy_amt):
         if contract_address == '':
@@ -74,25 +111,37 @@ class SubmitOrder:
         df = fetch_data(f"SELECT * FROM open_positions WHERE contract_address = '{contract_address}'")
 
         if not df.empty:
-            date = data[0]
-            time = data[1]
+            date = data[0][0]
+            time = data[0][1]
             token = df['token'].iloc[0]
+            mc = data[0][6]
             avg_mc = float(self.calculate_avg_mc(contract_address))
             initial_investment = float(df['initial_investment'] + actual_buy_amt)
             remaining = float(df['remaining'] + actual_buy_amt)
-            data = (date, time, df['symbol'].iloc[0], token, df['contract_address'].iloc[0], avg_mc, initial_investment, remaining, float(df['sold'].iloc[0]))
+            price_change = self.calculate_changes(mc, avg_mc, remaining)
+            remaining = remaining + price_change
+            unrealized_profit = remaining - (initial_investment - float(df['sold'].iloc[0]))
+            roi = self.calculate_roi(initial_investment, remaining, float(df['sold'].iloc[0]))
+            data = [(date, time, df['symbol'].iloc[0], token, df['contract_address'].iloc[0], mc, avg_mc, initial_investment, remaining, float(df['sold'].iloc[0]), unrealized_profit, roi)]
             delete_open_position(contract_address)
             insert_to_db('open_positions', data)
         
         else:
-            date = data[0]
-            time = data[1]
-            symbol = data[2]
-            token = data[3]
-            avg_mc = data[6]
-            initial_investment = remaining = data[9]
+            date = data[0][0]
+            time = data[0][1]
+            symbol = data[0][2]
+            token = data[0][3]
+            mc = data[0][6]
+            initial_investment = remaining = data[0][9]
             sold = 0
-            data = (date, time, symbol, token, contract_address, avg_mc, initial_investment, remaining, sold)
+            unrealized_profit = 0.0
+            roi = 0.0
+            data = [[date, time, symbol, token, contract_address, mc, mc, initial_investment, remaining, sold, unrealized_profit, roi]]
             insert_to_db('open_positions', data)
 
         self.settings.update_settings('balance', self.balance - buy_amt, rerun=False)
+
+    # def sell_coin(self, contract_address, sell_percentage):
+    #     if not isinstance(sell_percentage, float):
+    #         sell_percentage = float(sell_percentage.strip('%'))
+    #     df = fetch_data(f"SELECT * FROM open_positions WHERE contract_address = '{contract_address}'")

@@ -21,14 +21,13 @@ if os.path.exists('trades.ddb'):
             st.header("Buy", anchor=False, divider='green')
             ca_input = st.text_input("Contract Address (CA)")
             buy_sol_amt = st.number_input("Buy Amount (sol)", min_value=0.0)
-            submit_buy = st.button("BUY")
+            submit_buy = st.button("BUY", use_container_width=True)
             if submit_buy:
                 error = order.buy_coin(ca_input, buy_sol_amt)
                 if error is not None:
                     st.toast(f"{error}", icon='🚨')
                 else:
                     st.toast(f"Buy order submitted! Priority fee: {priority_buy_fee}", icon='✅')
-                    time.sleep(1)
 
     with col2:
         options = get_open_token_contract()
@@ -45,8 +44,17 @@ if os.path.exists('trades.ddb'):
             else:
                 st.session_state['disable_number_input'] = True
             st.number_input("Sell percentage", min_value=0.0, max_value=100.0, label_visibility='collapsed', disabled=st.session_state['disable_number_input'])
-            submit_sell = st.button("SELL", type='primary')
+            submit_sell = st.button("SELL", type='primary', use_container_width=True)
 
     st.header("🟢 Positions", anchor=False)
+    refresh_open_positions = st.button("🔄")
+    if refresh_open_positions:
+        error = order.refresh_token()
+        if error is None:
+            refresh_toast_text = "Opened positions refreshed!"
+        else:
+            refresh_toast_text = error
+        st.toast(refresh_toast_text, icon='🔄')
+
     df = fetch_data("SELECT * FROM open_positions")
     st.dataframe(df)
