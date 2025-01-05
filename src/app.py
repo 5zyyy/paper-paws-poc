@@ -27,7 +27,7 @@ balance = settings.get_settings()['balance']
 with st.sidebar:
     st.title("💰 Balance")
     st.code(f"{balance} sol")
-    st.title("🐾 Paper Paws", anchor=False)
+    st.title("🐾 Paper Paws POC", anchor=False)
     st.write("Version: 1.0.0")
     st.write(
         "Made by [awl](https://github.com/5zyyy)",

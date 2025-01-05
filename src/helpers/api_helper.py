@@ -85,3 +85,115 @@ class QueryAPI:
                 return 'Contract Address is invalid!'
         else:
             return f'{response.text} (Status Code: {response.status_code})'
+        
+    def get_multiple_token_data(self, contract_address):
+        url = "https://streaming.bitquery.io/eap"
+
+        query = """
+        query GetDEXTradeAndTokenSupply($mintAddresses: [String!]) {
+        Solana {
+            DEXTrades( 
+            orderBy: { descending: Block_Time }
+            where: {
+                Trade: {
+                Buy: { Currency: { MintAddress: { in: $mintAddresses } } }
+                }
+                Transaction: { Result: { Success: true } }
+            }
+            ) {
+            Trade {
+                Buy {
+                PriceInUSD
+                Currency {
+                    Name
+                    Symbol
+                    MintAddress
+                }
+                }
+            }
+            }
+            TokenSupplyUpdates(
+            orderBy: { descending: Block_Time }
+            where: {
+                TokenSupplyUpdate: { Currency: { MintAddress: { in: $mintAddresses } } }
+            }
+            ) {
+            TokenSupplyUpdate {
+                Currency{
+                    MintAddress
+                }
+                PostBalance
+            }
+            }
+        }
+        }
+
+        """
+
+        variables = {
+            "mintAddresses": contract_address
+        }
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-API-KEY": self.api_key
+        }
+
+        response = requests.post(
+            url,
+            json={"query": query, "variables": variables},
+            headers=headers
+        )
+
+        if response.status_code == 200:
+            num_of_ca = len(contract_address)
+            data = response.json()
+
+            dex_trades = data['data']['Solana']['DEXTrades']
+            token_supply_updates = data['data']['Solana']['TokenSupplyUpdates']
+
+            latest_trades = {}
+            latest_balances = {}
+
+            added_count = 0
+            for trade in dex_trades:
+                mint_address = trade['Trade']['Buy']['Currency']['MintAddress']
+
+                if mint_address not in latest_trades:
+                    latest_trades[mint_address] = {
+                        'token_name' : trade['Trade']['Buy']['Currency']['Name'],
+                        'token_symbol': trade['Trade']['Buy']['Currency']['Symbol'],
+                        'token_price': trade['Trade']['Buy']['PriceInUSD']
+                    }
+                    added_count += 1
+                    if added_count == num_of_ca:
+                        break
+            
+            added_count = 0
+            for supply_update in token_supply_updates:
+                mint_address = supply_update['TokenSupplyUpdate']['Currency']['MintAddress']
+
+                if mint_address not in latest_balances:
+                    latest_balances[mint_address] = supply_update['TokenSupplyUpdate']['PostBalance']
+                    added_count += 1
+                    if added_count == num_of_ca:
+                        break
+
+            details = {}
+            for mint_address, trade in latest_trades.items():
+                token_name = trade['token_name']
+                token_symbol = trade['token_symbol']
+                token_price = float(trade['token_price'])
+                token_supply = float(latest_balances.get(mint_address, 0))
+                market_cap = token_supply * token_price
+
+                details[mint_address] = {
+                    'name': token_name,
+                    'symbol': token_symbol,
+                    'market_cap': market_cap,
+                    'token_price': token_price
+                }
+
+            return details
+        else:
+            return f'{response.text} (Status Code: {response.status_code})'
