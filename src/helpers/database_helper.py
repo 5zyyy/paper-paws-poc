@@ -59,7 +59,7 @@ def fetch_data(query):
         data = con.sql(query).df()
     return data
 
-def delete_open_position(contract_address):
+def delete_position(contract_address):
     with duckdb.connect('trades.ddb') as con:
         contract_address_str = ""
         if isinstance(contract_address, list):
