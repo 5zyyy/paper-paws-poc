@@ -5,5 +5,5 @@ from helpers.database_helper import fetch_data
 st.title("📊 Portfolio", anchor=False)
 
 if os.path.exists('trades.ddb'):
-    df = fetch_data("SELECT * FROM positions WHERE action = 'sell'")
+    df = fetch_data("SELECT * FROM WHERE remaining = 0")
     st.dataframe(df)
