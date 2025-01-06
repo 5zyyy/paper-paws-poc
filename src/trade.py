@@ -19,11 +19,11 @@ if os.path.exists('trades.ddb'):
     with col1:
         with st.container(border=True):
             st.header("Buy", anchor=False, divider='green')
-            ca_input = st.text_input("Contract Address (CA)")
+            ca_input_buy = st.text_input("Contract Address (CA)")
             buy_sol_amt = st.number_input("Buy Amount (sol)", min_value=0.0)
             submit_buy = st.button("BUY", use_container_width=True)
             if submit_buy:
-                error = order.buy_coin(ca_input, buy_sol_amt)
+                error = order.buy_coin(ca_input_buy, buy_sol_amt)
                 if error is not None:
                     st.toast(f"{error}", icon='🚨')
                 else:
@@ -35,18 +35,30 @@ if os.path.exists('trades.ddb'):
         options = get_open_token_contract()
         with st.container(border=True):
             st.header("Sell", anchor=False, divider='red')
-            st.selectbox("Select token", options)
-            sell_percentage = st.radio(
+            ca_input_sell = st.selectbox("Select token", options)
+            sell_percentage_radio = st.radio(
                 "Sell percentage",
                 [None, "25%", "50%", "75%", "100%"],
                 horizontal=True
             )
-            if sell_percentage is None:
+            if sell_percentage_radio is None:
                 st.session_state['disable_number_input'] = False
             else:
                 st.session_state['disable_number_input'] = True
-            st.number_input("Sell percentage", min_value=0.0, max_value=100.0, label_visibility='collapsed', disabled=st.session_state['disable_number_input'])
+            sell_percentage_input = st.number_input("Sell percentage", min_value=0.0, max_value=100.0, label_visibility='collapsed', disabled=st.session_state['disable_number_input'])
             submit_sell = st.button("SELL", type='primary', use_container_width=True)
+            if submit_sell:
+                if st.session_state['disable_number_input']:
+                    sell_percentage = sell_percentage_radio
+                else:
+                    sell_percentage = sell_percentage_input
+                error = order.sell_coin(ca_input_sell, sell_percentage)
+                if error is not None:
+                    st.toast(f"{error}", icon='🚨')
+                else:
+                    st.toast(f"Sell order submitted! Priority fee: {priority_buy_fee}", icon='✅')
+                    time.sleep(1)
+                    st.rerun()
 
     st.header("🟢 Positions", anchor=False)
     refresh_open_positions = st.button("🔄")
