@@ -58,5 +58,5 @@ if os.path.exists('trades.ddb'):
             refresh_toast_text = error
         st.toast(refresh_toast_text, icon='🔄')
 
-    df = fetch_data("SELECT * FROM positions")
+    df = fetch_data("SELECT * FROM positions WHERE remaining > 0")
     st.dataframe(df)
