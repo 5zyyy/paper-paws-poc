@@ -40,9 +40,9 @@ class SubmitOrder:
 
         return avg_mc
     
-    def calculate_changes(self, mc, amc, remaining):
+    def calculate_changes(self, mc, amc, initial_not_sold):
         percentage_change = (mc - amc)/amc
-        sol_difference = remaining * percentage_change
+        sol_difference = initial_not_sold * percentage_change
         return sol_difference
 
     def calculate_roi(self, initial_investment, remaining, sold):
@@ -66,7 +66,7 @@ class SubmitOrder:
         token_amt = self.calulcate_token_amt(buy_amt, token_price, sol_price['solana']['usd'])
 
         data =[[date, time, symbol, name, contract_address, 'buy', mc, token_price, token_amt, buy_amt]]
-        insert_to_db('transactions', data)
+        insert_to_db('transactions', data)  
         return data
     
     def refresh_token(self):
@@ -84,12 +84,12 @@ class SubmitOrder:
         for _, row in df.iterrows():
             ca = row['contract_address']
             mc = all_token_details[ca]['market_cap']
-            price_change = self.calculate_changes(mc, row['average_market_cap'], row['remaining'])
+            initial_not_sold = row['initial_investment'] - row['sold']
+            unrealized_profit = self.calculate_changes(mc, row['average_market_cap'], initial_not_sold)
             print("remaining before change", row['remaining']) #debug
-            print("unreal profit", price_change)#debug
-            remaining = row['remaining'] + price_change
+            print("unreal profit", unrealized_profit)#debug
+            remaining = initial_not_sold + unrealized_profit
             print("remaining after change", remaining) #debug
-            unrealized_profit = remaining - (row['initial_investment'] - row['sold'])
             roi = self.calculate_roi(row['initial_investment'], remaining, row['sold'])
             data = [row['date'], row['time'], row['symbol'], row['token'], row['contract_address'], mc, row['average_market_cap'], row['initial_investment'], remaining, row['sold'], unrealized_profit, roi]
             to_insert.append(data)
@@ -116,11 +116,10 @@ class SubmitOrder:
             token = df['token'].iloc[0]
             mc = data[0][6]
             avg_mc = float(self.calculate_avg_mc(contract_address))
-            initial_investment = float(df['initial_investment'] + actual_buy_amt)
-            remaining = float(df['remaining'] + actual_buy_amt)
-            price_change = self.calculate_changes(mc, avg_mc, remaining)
-            remaining = remaining + price_change
-            unrealized_profit = remaining - (initial_investment - float(df['sold'].iloc[0]))
+            initial_investment = float(df['initial_investment']) + actual_buy_amt
+            initial_not_sold = initial_investment - float(df['sold'].iloc[0])
+            unrealized_profit = self.calculate_changes(mc, avg_mc, initial_not_sold)
+            remaining = initial_not_sold + unrealized_profit
             roi = self.calculate_roi(initial_investment, remaining, float(df['sold'].iloc[0]))
             data = [(date, time, df['symbol'].iloc[0], token, df['contract_address'].iloc[0], mc, avg_mc, initial_investment, remaining, float(df['sold'].iloc[0]), unrealized_profit, roi)]
             delete_open_position(contract_address)
