@@ -28,6 +28,8 @@ if os.path.exists('trades.ddb'):
                     st.toast(f"{error}", icon='🚨')
                 else:
                     st.toast(f"Buy order submitted! Priority fee: {priority_buy_fee}", icon='✅')
+                    time.sleep(1)
+                    st.rerun()
 
     with col2:
         options = get_open_token_contract()
@@ -56,5 +58,5 @@ if os.path.exists('trades.ddb'):
             refresh_toast_text = error
         st.toast(refresh_toast_text, icon='🔄')
 
-    df = fetch_data("SELECT * FROM open_positions")
+    df = fetch_data("SELECT * FROM positions")
     st.dataframe(df)

@@ -1,7 +1,9 @@
 import streamlit as st
 import os
+from helpers.database_helper import fetch_data
 
 st.title("📊 Portfolio", anchor=False)
 
 if os.path.exists('trades.ddb'):
-    st.write("placeholder")
+    df = fetch_data("SELECT * FROM positions WHERE action = 'sell'")
+    st.dataframe(df)
