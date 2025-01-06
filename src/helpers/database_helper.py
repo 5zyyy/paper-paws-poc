@@ -19,7 +19,7 @@ def create_db():
         ''')
 
         con.execute(f'''
-            CREATE TABLE IF NOT EXISTS open_positions (
+            CREATE TABLE IF NOT EXISTS positions (
                 date DATE,
                 time TIME,
                 symbol TEXT,
@@ -46,7 +46,7 @@ def insert_to_db(table, data):
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             '''
 
-        elif table == 'open_positions':
+        elif table == 'positions':
             query = f'''
                 INSERT INTO {table} (date, time, symbol, token, contract_address, market_cap, average_market_cap, initial_investment, remaining, sold, unrealized_profit, roi)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -74,4 +74,4 @@ def delete_open_position(contract_address):
         else:
             return "ERROR: contract_address is neither a list nor a string"
         
-        con.execute(f"DELETE FROM open_positions WHERE contract_address IN ({contract_address_str})")
+        con.execute(f"DELETE FROM positions WHERE contract_address IN ({contract_address_str})")
