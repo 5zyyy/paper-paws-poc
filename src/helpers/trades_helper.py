@@ -49,7 +49,7 @@ class SubmitOrder:
         roi_percentage = (((remaining + sold) - initial_investment)/initial_investment) * 100
         return roi_percentage
     
-    def add_to_trade_history(self, contract_address, amt, action):
+    def add_to_trade_history(self, contract_address, amt, action, token_amt=None):
         token_details = self.query_api.token_data(contract_address)
         if isinstance(token_details, str):
             return token_details
@@ -63,7 +63,8 @@ class SubmitOrder:
         name = token_details['name']
         mc = token_details['market_cap']
         token_price = token_details['token_price']
-        token_amt = self.calulcate_token_amt(amt, token_price, sol_price['solana']['usd'])
+        if token_amt is None:
+            token_amt = self.calulcate_token_amt(amt, token_price, sol_price['solana']['usd'])
 
         data =[[date, time, symbol, name, contract_address, action, mc, token_price, token_amt, amt]]
         insert_to_db('transactions', data)  
@@ -182,7 +183,7 @@ class SubmitOrder:
             remaining_token_amt = current_token_amt - tokens_to_sell
             remaining = float(df['remaining'].iloc[0]) - sell_amt
 
-        data = self.add_to_trade_history(contract_address, actual_sell_amt, 'sell')
+        data = self.add_to_trade_history(contract_address, actual_sell_amt, 'sell', tokens_to_sell)
         if isinstance(data, str):
             return data
         
@@ -190,11 +191,11 @@ class SubmitOrder:
         time = data[0][1]
         symbol = data[0][2]
         token = data[0][3]
-        mc = float(df['market_cap'].iloc[0])
+        mc = token_details['market_cap']
         avg_mc = float(df['average_market_cap'].iloc[0])
         initial_investment = float(df['initial_investment'].iloc[0])
         total_sold = float(df['sold'].iloc[0]) + actual_sell_amt
-        total_token_amt = float(df['total_token_amt'].iloc[0])  # Keep track of total tokens
+        total_token_amt = float(df['total_token_amt'].iloc[0])
         
         # For 100% sells, set these values appropriately
         if sell_percentage == 100:
