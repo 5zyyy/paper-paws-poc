@@ -31,6 +31,7 @@ def create_db():
                 remaining REAL,
                 sold REAL,
                 unrealized_profit REAL,
+                realized_profit REAL,
                 roi REAL,
                 total_token_amt REAL,
                 remaining_token_amt REAL
@@ -50,8 +51,8 @@ def insert_to_db(table, data):
 
         elif table == 'positions':
             query = f'''
-                INSERT INTO {table} (date, time, symbol, token, contract_address, market_cap, average_market_cap, initial_investment, remaining, sold, unrealized_profit, roi, total_token_amt, remaining_token_amt)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO {table} (date, time, symbol, token, contract_address, market_cap, average_market_cap, initial_investment, remaining, sold, unrealized_profit, realized_profit, roi, total_token_amt, remaining_token_amt)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             '''
 
         con.executemany(query, data)
