@@ -71,7 +71,7 @@ class SubmitOrder:
         return data
     
     def refresh_token(self):
-        df = fetch_data("SELECT date, time, symbol, token, contract_address, average_market_cap, initial_investment, remaining, sold, total_token_amt, remaining_token_amt FROM positions WHERE remaining > 0")
+        df = fetch_data("SELECT date, time, symbol, token, contract_address, average_market_cap, initial_investment, remaining, sold, total_token_amt, remaining_token_amt, realized_profit FROM positions WHERE remaining > 0")
         if df.empty:
             return "No open positions to refresh!"
 
@@ -91,7 +91,7 @@ class SubmitOrder:
             roi = self.calculate_roi(row['initial_investment'], remaining, row['sold'])
             data = [row['date'], row['time'], row['symbol'], row['token'], row['contract_address'], 
                    mc, row['average_market_cap'], row['initial_investment'], remaining, row['sold'], 
-                   unrealized_profit, roi, row['total_token_amt'], row['remaining_token_amt']]
+                   unrealized_profit, row['realized_profit'], roi, row['total_token_amt'], row['remaining_token_amt']]
             to_insert.append(data)
 
         delete_position(ca_to_refresh)
@@ -124,7 +124,8 @@ class SubmitOrder:
             roi = self.calculate_roi(initial_investment, remaining, float(df['sold'].iloc[0]))
             total_token_amt = float(df['total_token_amt']) + token_amt
             remaining_token_amt = float(df['remaining_token_amt']) + token_amt
-            data = [(date, time, df['symbol'].iloc[0], token, df['contract_address'].iloc[0], mc, avg_mc, initial_investment, remaining, float(df['sold'].iloc[0]), unrealized_profit, roi, total_token_amt, remaining_token_amt)]
+            realized_profit = float(df['realized_profit'].iloc[0])  # Keep existing realized profit
+            data = [(date, time, df['symbol'].iloc[0], token, df['contract_address'].iloc[0], mc, avg_mc, initial_investment, remaining, float(df['sold'].iloc[0]), unrealized_profit, realized_profit, roi, total_token_amt, remaining_token_amt)]
             delete_position(contract_address)
             insert_to_db('positions', data)
         
@@ -138,8 +139,9 @@ class SubmitOrder:
             initial_investment = remaining = data[0][9]
             sold = 0
             unrealized_profit = 0.0
+            realized_profit = 0.0  # Initialize realized profit to 0 for new positions
             roi = 0.0
-            data = [[date, time, symbol, token, contract_address, mc, mc, initial_investment, remaining, sold, unrealized_profit, roi, token_amt, token_amt]]
+            data = [[date, time, symbol, token, contract_address, mc, mc, initial_investment, remaining, sold, unrealized_profit, realized_profit, roi, token_amt, token_amt]]
             insert_to_db('positions', data)
 
         self.settings.update_settings('balance', self.balance - buy_amt, rerun=False)
@@ -175,6 +177,11 @@ class SubmitOrder:
         if actual_sell_amt <= 0:
             return 'Insufficient balance to pay priority fee!'
 
+        # Calculate realized profit for this sale
+        proportion_sold = tokens_to_sell / float(df['total_token_amt'].iloc[0])
+        cost_basis = float(df['initial_investment'].iloc[0]) * proportion_sold
+        realized_profit_from_sale = actual_sell_amt - cost_basis
+
         # For 100% sells, set remaining to 0
         if sell_percentage == 100:
             remaining_token_amt = 0
@@ -196,6 +203,7 @@ class SubmitOrder:
         initial_investment = float(df['initial_investment'].iloc[0])
         total_sold = float(df['sold'].iloc[0]) + actual_sell_amt
         total_token_amt = float(df['total_token_amt'].iloc[0])
+        total_realized_profit = float(df['realized_profit'].iloc[0]) + realized_profit_from_sale
         
         # For 100% sells, set these values appropriately
         if sell_percentage == 100:
@@ -210,10 +218,10 @@ class SubmitOrder:
         
         roi = self.calculate_roi(initial_investment, remaining, total_sold)
         
-        # Create data list with all 14 required fields
+        # Create data list with all required fields including realized profit
         data = [(date, time, symbol, token, contract_address, mc, avg_mc, 
                 initial_investment, remaining, total_sold, unrealized_profit, 
-                roi, total_token_amt, remaining_token_amt)]
+                total_realized_profit, roi, total_token_amt, remaining_token_amt)]
         
         delete_position(contract_address)
         insert_to_db('positions', data)
