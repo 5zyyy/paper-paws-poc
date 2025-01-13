@@ -71,4 +71,7 @@ if os.path.exists('trades.ddb'):
         st.toast(refresh_toast_text, icon='🔄')
 
     df = fetch_data("SELECT * FROM positions WHERE remaining > 0")
-    st.dataframe(df)
+    if df.empty:
+        st.info("No opened positions found")
+    else:
+        st.dataframe(df)

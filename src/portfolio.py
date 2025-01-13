@@ -41,8 +41,14 @@ if os.path.exists('trades.ddb'):
     # Display positions
     st.subheader("Opened Positions", anchor=False)
     opened_df = fetch_data("SELECT * FROM positions WHERE remaining > 0")
-    st.dataframe(opened_df)
+    if opened_df.empty:
+        st.info("No opened positions found")
+    else:
+        st.dataframe(opened_df)
 
     st.subheader("Closed Positions", anchor=False)
     closed_df = fetch_data("SELECT * FROM positions WHERE remaining = 0")
-    st.dataframe(closed_df)
+    if closed_df.empty:
+        st.info("No closed positions found")
+    else:
+        st.dataframe(closed_df)
