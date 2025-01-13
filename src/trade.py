@@ -4,6 +4,7 @@ import time
 from helpers.database_helper import fetch_data
 from helpers.trades_helper import SubmitOrder, get_open_token_contract
 from helpers.settings_helper import SettingsConfiguration
+from helpers.helpers import format_positions_df
 
 st.title("📈 Trade", anchor=False)
 
@@ -74,4 +75,4 @@ if os.path.exists('trades.ddb'):
     if df.empty:
         st.info("No opened positions found")
     else:
-        st.dataframe(df)
+        st.dataframe(format_positions_df(df))
