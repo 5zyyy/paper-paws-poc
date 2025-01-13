@@ -11,7 +11,10 @@ class QueryAPI:
             data = response.json() 
             return data
         else:
-            return f'Error! (Status Code: {response.status_code})'
+            if response.status_code == 429:
+                return f'Too many request made to CoinGecko API! (Status Code: {response.status_code})'
+            else:
+                return f'Error! (Status Code: {response.status_code})'
 
     def token_data(self, contract_address):
         url = "https://streaming.bitquery.io/eap"
@@ -80,6 +83,7 @@ class QueryAPI:
                     'market_cap': market_cap,
                     'token_price': token_price
                 }
+                print(f"token_data:\n{details}")
                 return details
             except Exception as e:
                 return 'Contract Address is invalid!'
@@ -194,6 +198,7 @@ class QueryAPI:
                     'token_price': token_price
                 }
 
+            print(f"get_multiple_token_data:\n{details}")
             return details
         else:
             return f'{response.text} (Status Code: {response.status_code})'
