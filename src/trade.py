@@ -68,7 +68,7 @@ if os.path.exists('trades.ddb'):
         css_styles="""
             {
                 position: relative;
-                width: fit-content;
+                width: 10px;
                 margin-top: -53px;
                 margin-left: 200px;
             }
