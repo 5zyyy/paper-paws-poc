@@ -63,6 +63,10 @@ class SubmitOrder:
         name = token_details['name']
         mc = token_details['market_cap']
         token_price = token_details['token_price']
+
+        if token_price <= 0:
+            return 'Token price is 0! Try again later!'
+
         if token_amt is None:
             token_amt = self.calulcate_token_amt(amt, token_price, sol_price['solana']['usd'])
 

@@ -2,6 +2,7 @@ import streamlit as st
 import os
 from helpers.database_helper import fetch_data
 import pandas as pd
+from helpers.helpers import format_positions_df
 
 st.title("📊 Portfolio", anchor=False)
 
@@ -41,8 +42,14 @@ if os.path.exists('trades.ddb'):
     # Display positions
     st.subheader("Opened Positions", anchor=False)
     opened_df = fetch_data("SELECT * FROM positions WHERE remaining > 0")
-    st.dataframe(opened_df)
+    if opened_df.empty:
+        st.info("No opened positions found")
+    else:
+        st.dataframe(format_positions_df(opened_df))
 
     st.subheader("Closed Positions", anchor=False)
     closed_df = fetch_data("SELECT * FROM positions WHERE remaining = 0")
-    st.dataframe(closed_df)
+    if closed_df.empty:
+        st.info("No closed positions found")
+    else:
+        st.dataframe(format_positions_df(closed_df))

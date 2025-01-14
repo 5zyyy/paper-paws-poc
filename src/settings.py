@@ -79,9 +79,4 @@ with st.container(border=True):
             st.rerun()
 
     st.subheader("Version: 1.0.0", anchor=False)
-    check_update_btn = st.button("Check for updates")
-
-st.write(
-    "Made by [awl](https://github.com/5zyyy)",
-    unsafe_allow_html=True
-)
+    check_update_btn = st.link_button("Github", 'https://github.com/5zyyy/paper-paws-poc')
