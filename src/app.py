@@ -7,8 +7,8 @@ st.set_page_config(layout="wide")
 
 st.markdown("""
     <style>
-        [data-testid="stBaseButton-headerNoPadding"],
-        [data-testid="stBaseButton-header"] {
+        #MainMenu,
+        .stAppDeployButton {
             display: none !important;
         }
     </style>
