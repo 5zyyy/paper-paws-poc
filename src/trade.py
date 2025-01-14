@@ -72,7 +72,7 @@ if os.path.exists('trades.ddb'):
                 margin-top: -53px;
                 margin-left: 200px;
             }
-            .st-emotion-cache-b0y9n5 {
+            .st-key-refresh_btn button {
                 background-color: transparent !important;
                 border: none !important;
                 padding: 2px 15px !important;
@@ -80,13 +80,14 @@ if os.path.exists('trades.ddb'):
                 color: rgba(255, 255, 255, 0.7) !important;
                 font-size: 20px !important;
             }
-            .st-emotion-cache-b0y9n5:hover {
+            .st-key-refresh_btn button:hover {
                 color: rgba(255, 255, 255, 1) !important;
                 transform: rotate(180deg) scale(1.3);
             }
         """
     ):
-        refresh_open_positions = st.button("↻", help="Refresh")
+        with st.container(key="refresh_btn"):
+            refresh_open_positions = st.button("↻", help="Refresh")
 
     if refresh_open_positions:
         error = order.refresh_token()
