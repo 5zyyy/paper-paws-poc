@@ -5,6 +5,20 @@ from helpers.settings_helper import SettingsConfiguration
 
 st.set_page_config(layout="wide")
 
+st.markdown("""
+    <style>
+        .stAppHeader,
+        #MainMenu,
+        .stAppDeployButton {
+            display: none !important;
+        }
+            
+        .stMainBlockContainer {
+            padding-top: 50px !important;
+        }   
+    </style>
+""", unsafe_allow_html=True)
+
 if not os.path.exists('trades.ddb'):
     st.error('Database does not exist! To start paper trading, create a database in settings.', icon="🚨")
 
@@ -26,11 +40,11 @@ balance = settings.get_settings()['balance']
 
 with st.sidebar:
     st.title("💰 Balance")
-    st.code(f"{balance} sol")
+    st.code(f"{balance:.3f} sol")
     st.title("🐾 Paper Paws POC", anchor=False)
     st.write("Version: 1.0.0")
     st.write(
-        "Made by [awl](https://github.com/5zyyy)",
+        "Made by [awl](https://x.com/5zy12), [ryan](https://x.com), [mark](https://x.com)",
         unsafe_allow_html=True
     )
 

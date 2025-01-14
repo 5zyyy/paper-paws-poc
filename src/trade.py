@@ -4,6 +4,8 @@ import time
 from helpers.database_helper import fetch_data
 from helpers.trades_helper import SubmitOrder, get_open_token_contract
 from helpers.settings_helper import SettingsConfiguration
+from helpers.helpers import format_positions_df
+from streamlit_extras.stylable_container import stylable_container
 
 st.title("📈 Trade", anchor=False)
 
@@ -61,7 +63,32 @@ if os.path.exists('trades.ddb'):
                     st.rerun()
 
     st.header("🟢 Positions", anchor=False)
-    refresh_open_positions = st.button("🔄")
+    with stylable_container(
+        key="refresh_button",
+        css_styles="""
+            {
+                position: relative;
+                width: 10px;
+                margin-top: -53px;
+                margin-left: 200px;
+            }
+            .st-key-refresh_btn button {
+                background-color: transparent !important;
+                border: none !important;
+                padding: 2px 15px !important;
+                transition: all 0.2s ease;
+                color: rgba(255, 255, 255, 0.7) !important;
+                font-size: 20px !important;
+            }
+            .st-key-refresh_btn button:hover {
+                color: rgba(255, 255, 255, 1) !important;
+                transform: rotate(180deg) scale(1.3);
+            }
+        """
+    ):
+        with st.container(key="refresh_btn"):
+            refresh_open_positions = st.button("↻", help="Refresh")
+
     if refresh_open_positions:
         error = order.refresh_token()
         if error is None:
@@ -71,4 +98,7 @@ if os.path.exists('trades.ddb'):
         st.toast(refresh_toast_text, icon='🔄')
 
     df = fetch_data("SELECT * FROM positions WHERE remaining > 0")
-    st.dataframe(df)
+    if df.empty:
+        st.info("No opened positions found")
+    else:
+        st.dataframe(format_positions_df(df))
