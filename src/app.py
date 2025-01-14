@@ -5,6 +5,15 @@ from helpers.settings_helper import SettingsConfiguration
 
 st.set_page_config(layout="wide")
 
+st.markdown("""
+    <style>
+        [data-testid="stBaseButton-headerNoPadding"],
+        [data-testid="stBaseButton-header"] {
+            display: none !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 if not os.path.exists('trades.ddb'):
     st.error('Database does not exist! To start paper trading, create a database in settings.', icon="🚨")
 
