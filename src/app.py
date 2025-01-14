@@ -7,10 +7,15 @@ st.set_page_config(layout="wide")
 
 st.markdown("""
     <style>
+        .stAppHeader,
         #MainMenu,
         .stAppDeployButton {
             display: none !important;
         }
+            
+        .stMainBlockContainer {
+            padding-top: 50px !important;
+        }   
     </style>
 """, unsafe_allow_html=True)
 
