@@ -2,9 +2,21 @@ import requests
 
 class QueryAPI:
     def __init__(self, api_key):
+        """
+        Initialize the QueryAPI with an API key.
+
+        Parameters:
+        - api_key (str): The API key for authentication.
+        """
         self.api_key = api_key
 
     def get_sol_price(self):
+        """
+        Get the current price of SOL in USD.
+
+        Returns:
+        - dict or str: Price data or error message.
+        """
         url = 'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd'
         response = requests.get(url)
         if response.status_code == 200:
@@ -17,6 +29,15 @@ class QueryAPI:
                 return f'Error! (Status Code: {response.status_code})'
 
     def token_data(self, contract_address):
+        """
+        Get token data for a specific contract address.
+
+        Parameters:
+        - contract_address (str): The contract address of the token.
+
+        Returns:
+        - dict or str: Token details or error message.
+        """
         url = "https://streaming.bitquery.io/eap"
 
         query = """
@@ -91,6 +112,15 @@ class QueryAPI:
             return f'{response.text} (Status Code: {response.status_code})'
         
     def get_multiple_token_data(self, contract_address):
+        """
+        Get data for multiple tokens based on contract addresses.
+
+        Parameters:
+        - contract_address (list): List of contract addresses.
+
+        Returns:
+        - dict or str: Token details or error message.
+        """
         url = "https://streaming.bitquery.io/eap"
 
         query = """

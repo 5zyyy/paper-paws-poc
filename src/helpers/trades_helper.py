@@ -5,12 +5,21 @@ from helpers.api_helper import QueryAPI
 from helpers.database_helper import insert_to_db, fetch_data, delete_position
 
 def get_open_token_contract():
+    """
+    Fetch open token contracts with remaining balance.
+
+    Returns:
+    - tuple: Tuple of token and contract address strings.
+    """
     df = fetch_data("SELECT * FROM positions WHERE remaining > 0")
     token_contract_tuple = tuple(f"{token} - {contract}" for token, contract in zip(df['token'], df['contract_address']))
     return token_contract_tuple
 
 class SubmitOrder:
     def __init__(self):
+        """
+        Initialize the SubmitOrder class with settings and API configurations.
+        """
         self.settings = SettingsConfiguration('settings.yaml')
         self.settings_data = self.settings.get_settings()
         self.api_key = self.settings_data['api_key']
@@ -20,9 +29,29 @@ class SubmitOrder:
         self.query_api = QueryAPI(self.api_key)
 
     def calulcate_token_amt(self, total, token_price, sol_price):
+        """
+        Calculate the amount of tokens based on total SOL, token price, and SOL price.
+
+        Parameters:
+        - total (float): Total SOL amount.
+        - token_price (float): Price of the token.
+        - sol_price (float): Price of SOL.
+
+        Returns:
+        - float: Calculated token amount.
+        """
         return (sol_price * total)/token_price
     
     def calculate_avg_mc(self, contract_address):
+        """
+        Calculate the average market cap for a given contract address.
+
+        Parameters:
+        - contract_address (str): The contract address to calculate for.
+
+        Returns:
+        - float: Average market cap.
+        """
         df = fetch_data(f"SELECT * FROM transactions WHERE contract_address = '{contract_address}' AND action = 'buy'")
         
         total_tokens = df['token_amt'].sum()
@@ -41,15 +70,49 @@ class SubmitOrder:
         return avg_mc
     
     def calculate_changes(self, mc, amc, initial_not_sold):
+        """
+        Calculate the changes in value based on market cap and average market cap.
+
+        Parameters:
+        - mc (float): Current market cap.
+        - amc (float): Average market cap.
+        - initial_not_sold (float): Initial investment not sold.
+
+        Returns:
+        - float: Change in SOL value.
+        """
         percentage_change = (mc - amc)/amc
         sol_difference = initial_not_sold * percentage_change
         return sol_difference
 
     def calculate_roi(self, initial_investment, remaining, sold):
+        """
+        Calculate the return on investment (ROI).
+
+        Parameters:
+        - initial_investment (float): Initial investment amount.
+        - remaining (float): Remaining value.
+        - sold (float): Sold amount.
+
+        Returns:
+        - float: ROI percentage.
+        """
         roi_percentage = (((remaining + sold) - initial_investment)/initial_investment) * 100
         return roi_percentage
     
     def add_to_trade_history(self, contract_address, amt, action, token_amt=None):
+        """
+        Add a trade to the trade history.
+
+        Parameters:
+        - contract_address (str): Contract address of the token.
+        - amt (float): Amount in SOL.
+        - action (str): Action type ('buy' or 'sell').
+        - token_amt (float, optional): Amount of tokens.
+
+        Returns:
+        - list or str: Data added to the database or error message.
+        """
         token_details = self.query_api.token_data(contract_address)
         if isinstance(token_details, str):
             return token_details
@@ -75,6 +138,12 @@ class SubmitOrder:
         return data
     
     def refresh_token(self):
+        """
+        Refresh token data for open positions.
+
+        Returns:
+        - str or None: Error message or None if successful.
+        """
         df = fetch_data("SELECT date, time, symbol, token, contract_address, average_market_cap, initial_investment, remaining, sold, total_token_amt, remaining_token_amt, realized_profit FROM positions WHERE remaining > 0")
         if df.empty:
             return "No open positions to refresh!"
@@ -102,6 +171,16 @@ class SubmitOrder:
         insert_to_db('positions', to_insert)
 
     def buy_coin(self, contract_address, buy_amt):
+        """
+        Execute a buy order for a token.
+
+        Parameters:
+        - contract_address (str): Contract address of the token.
+        - buy_amt (float): Amount in SOL to buy.
+
+        Returns:
+        - str or None: Error message or None if successful.
+        """
         if contract_address == '':
             return 'No contract address entered!'
         if buy_amt <= 0:
@@ -151,6 +230,16 @@ class SubmitOrder:
         self.settings.update_settings('balance', self.balance - buy_amt, rerun=False)
 
     def sell_coin(self, contract_address, sell_percentage):
+        """
+        Execute a sell order for a token.
+
+        Parameters:
+        - contract_address (str): Contract address of the token.
+        - sell_percentage (float): Percentage of tokens to sell.
+
+        Returns:
+        - str or None: Error message or None if successful.
+        """
         if not isinstance(sell_percentage, float):
             sell_percentage = float(sell_percentage.strip('%'))
         if sell_percentage <= 0:
