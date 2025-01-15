@@ -2,6 +2,9 @@ import duckdb
 import os
 
 def create_db():
+    """
+    Create the database and tables if they do not exist.
+    """
     with duckdb.connect('trades.ddb') as con:
         con.execute(f'''
             CREATE TABLE IF NOT EXISTS transactions (
@@ -39,9 +42,19 @@ def create_db():
         ''')
 
 def delete_db():
+    """
+    Delete the database file.
+    """
     os.remove('trades.ddb')
 
 def insert_to_db(table, data):
+    """
+    Insert data into the specified table.
+
+    Parameters:
+    - table (str): The table to insert data into.
+    - data (list): The data to insert.
+    """
     with duckdb.connect('trades.ddb') as con:
         if table == 'transactions':
             query = f'''
@@ -58,11 +71,26 @@ def insert_to_db(table, data):
         con.executemany(query, data)
 
 def fetch_data(query):
+    """
+    Fetch data from the database using a SQL query.
+
+    Parameters:
+    - query (str): The SQL query to execute.
+
+    Returns:
+    - pd.DataFrame: The result of the query as a DataFrame.
+    """
     with duckdb.connect('trades.ddb') as con:
         data = con.sql(query).df()
     return data
 
 def delete_position(contract_address):
+    """
+    Delete positions from the database based on contract address.
+
+    Parameters:
+    - contract_address (str or list): The contract address(es) to delete.
+    """
     with duckdb.connect('trades.ddb') as con:
         contract_address_str = ""
         if isinstance(contract_address, list):
