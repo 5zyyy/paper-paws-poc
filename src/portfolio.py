@@ -45,7 +45,7 @@ if os.path.exists('trades.ddb'):
     if opened_df.empty:
         st.info("No opened positions found")
     else:
-        st.dataframe(format_positions_df(opened_df))
+        st.dataframe(format_positions_df(opened_df), hide_index=True)
 
     st.subheader("Closed Positions", anchor=False)
     total_closed = fetch_data("SELECT COUNT(*) as count FROM positions WHERE remaining = 0").iloc[0]['count']
@@ -64,7 +64,7 @@ if os.path.exists('trades.ddb'):
         )
         
         if df is not None:
-            st.dataframe(format_positions_df(df))
+            st.dataframe(format_positions_df(df), hide_index=True)
         
         if error:
             st.rerun()
