@@ -36,7 +36,7 @@ if os.path.exists('trades.ddb'):
         )
         
         if df is not None:
-            st.dataframe(format_transactions_df(df))
+            st.dataframe(format_transactions_df(df), hide_index=True)
         
         if error:
             st.rerun()

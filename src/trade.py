@@ -101,4 +101,4 @@ if os.path.exists('trades.ddb'):
     if df.empty:
         st.info("No opened positions found")
     else:
-        st.dataframe(format_positions_df(df))
+        st.dataframe(format_positions_df(df), hide_index=True)
