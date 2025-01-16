@@ -113,4 +113,13 @@ def format_transactions_df(df):
 
 @st.cache_data
 def convert_df(df):
-    return df.to_csv().encode("utf-8")
+    """
+    Convert a DataFrame to CSV format for downloading.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame to convert to CSV.
+
+    Returns:
+    - bytes: UTF-8 encoded CSV data ready for download.
+    """
+    return df.to_csv(index=False).encode("utf-8")
