@@ -1,5 +1,6 @@
 import duckdb
 import os
+import streamlit as st
 
 def create_db():
     """
@@ -83,6 +84,46 @@ def fetch_data(query):
     with duckdb.connect('trades.ddb') as con:
         data = con.sql(query).df()
     return data
+
+def fetch_data_paginated(query, page_number, total_rows, type):
+    """
+    Fetch paginated data from the database using a SQL query.
+
+    Parameters:
+    - query (str): The SQL query to execute.
+    - page_number (int): The current page number.
+    - total_rows (int): Total number of rows in the table.
+    - type (str): The type of data to fetch.
+
+    Returns:
+    - pd.DataFrame or None: The paginated result of the query as a DataFrame
+    - int or None: Total number of pages
+    - Boolean: True if the page number is out of bounds, False otherwise
+    """
+    page_size = 20
+    total_pages = (total_rows + page_size - 1) // page_size
+
+    if type == 'trade_history':
+        if st.session_state.trade_history_page_number > total_pages:
+            st.session_state.trade_history_page_number = total_pages
+            return None, None, True
+        
+        elif st.session_state.trade_history_page_number < 1:
+            st.session_state.trade_history_page_number = 1
+            return None, None, True
+    elif type == 'closed_positions':
+        if st.session_state.closed_positions_page_number > total_pages:
+            st.session_state.closed_positions_page_number = total_pages
+            return None, None, True
+        
+        elif st.session_state.closed_positions_page_number < 1:
+            st.session_state.closed_positions_page_number = 1
+            return None, None, True
+
+    offset = (page_number - 1) * page_size
+    query = f"{query} ORDER BY date DESC, time DESC LIMIT {page_size} OFFSET {offset}"
+    df = fetch_data(query)
+    return df, total_pages, False
 
 def delete_position(contract_address):
     """
