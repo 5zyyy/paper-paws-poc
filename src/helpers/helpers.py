@@ -1,5 +1,6 @@
 import yaml
 import pandas as pd
+import streamlit as st
 
 def write_yaml(path, content):
     """
@@ -109,3 +110,7 @@ def format_transactions_df(df):
     })
     
     return df
+
+@st.cache_data
+def convert_df(df):
+    return df.to_csv().encode("utf-8")
