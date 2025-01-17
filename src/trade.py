@@ -97,7 +97,7 @@ if os.path.exists('trades.ddb'):
             refresh_toast_text = error
         st.toast(refresh_toast_text, icon='🔄')
 
-    df = fetch_data("SELECT * FROM positions WHERE remaining > 0")
+    df = fetch_data("SELECT * FROM positions WHERE remaining > 0 ORDER BY date DESC, time DESC")
     if df.empty:
         st.info("No opened positions found")
     else:
