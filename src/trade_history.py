@@ -12,11 +12,12 @@ if os.path.exists('trades.ddb'):
         st.info("No trade history found")
     else:
         if st.button("Download"):
-            st.toast("📥 Downloading trade history...")
+            st.toast("Preparing download...", icon='⏳')
             df = fetch_data("SELECT * FROM transactions ORDER BY date DESC, time DESC")
             df = format_transactions_df(df)
             csv = df.to_csv(index=False).encode('utf-8')
-            
+            st.toast("Download ready!", icon='✅')
+
             st.download_button(
                 label="📄 Click to save file",
                 data=csv,
