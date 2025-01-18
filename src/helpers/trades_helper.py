@@ -188,6 +188,8 @@ class SubmitOrder:
         if self.balance - buy_amt < 0:
             return 'Insufficient balance!'
         actual_buy_amt = buy_amt - self.priority_buy_fee
+        if actual_buy_amt <= 0:
+            return 'Insufficient balance to pay priority fee!'
         data = self.add_to_trade_history(contract_address, actual_buy_amt, 'buy')
         if isinstance(data, str):
             return data
