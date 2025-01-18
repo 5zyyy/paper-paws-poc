@@ -1,0 +1,12 @@
+*.ipynb
+*.yaml
+*.ddb
+__pycache__
+*.egg-info
+.gitignore
+*.md
+.dockerignore
+.git
+.pytest_cache
+Dockerfile
+*.tar
