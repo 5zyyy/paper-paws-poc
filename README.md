@@ -14,7 +14,7 @@ Build docker image
 <br>
 ```docker build -t paper-paws-poc:1.0.0 .```
 
-Save docker image as .tar or download [here](https://drive.google.com/file/d/1G0IWby-UWwfCof3DmQXoQw30HDdVvB5G/view?usp=sharing)
+Save docker image as .tar or download [here](https://drive.google.com/file/d/1y2VrQ6zLwjj_E1R-Rwrc3tzCGA9SKIfu/view?usp=sharing)
 <br>
 ```docker save -o paper-paws-poc.tar paper-paws-poc:1.0.0```
 
