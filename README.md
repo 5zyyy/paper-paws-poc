@@ -33,8 +33,8 @@ A paper trading simulator for meme coins on the Solana blockchain. Practice trad
 
 ## 🔑 API Key Setup
 1. Sign up at [BitQuery](https://bitquery.io/)
-2. Get your API key from the dashboard
-3. Add your API key in the settings page of the app
+2. In BitQuery dashboard, navigate to Account > API V1 > Api-Keys
+3. Copy and paste your API key in the settings page of the app
 
 ## ⚡ Quick Start
 1. Install and run the app using one of the installation options above
