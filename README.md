@@ -37,7 +37,7 @@ A paper trading simulator for meme coins on the Solana blockchain. Practice trad
 3. Copy and paste your API key in the settings page of the app
 
 ## ⚡ Quick Start
-1. Install and run the app using one of the installation options above
+1. Install and run the app using one of the installation options [below](#️-installation)
 2. Navigate to `http://localhost:8501` in your browser
 3. Create a database and add BitQuery API key in settings
 4. Start paper trading!
