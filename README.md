@@ -47,29 +47,21 @@ A paper trading simulator for meme coins on the Solana blockchain. Practice trad
 *Add .exe installation steps here*
 
 ### Option 2: Direct Installation
-1️⃣ Clone the repository: ```git clone https://github.com/5zyyy/paper-paws-poc.git```
-<br>
-2️⃣ Install dependencies: ```pip install -e .```
-<br>
-3️⃣ Run the app: ```streamlit run .\src\app.py```  
+1. Clone the repository: ```git clone https://github.com/5zyyy/paper-paws-poc.git```
+2. Install dependencies: ```pip install -e .```
+3. Run the app: ```streamlit run .\src\app.py```  
 
 ### Option 3: Docker (Simple)
-1️⃣ Download .tar docker image [here](https://drive.google.com/file/d/1y2VrQ6zLwjj_E1R-Rwrc3tzCGA9SKIfu/view?usp=sharing)
-<br>
-2️⃣ Open command prompt in the directory where the .tar docker image is stored
-<br>
-3️⃣ Load docker image: ```docker load -i paper-paws-poc.tar```
-<br>
-4️⃣ Run docker image: ```docker run --name paper-paws-app -p 8501:8501 paper-paws-poc:1.0.0```
+1. Download .tar docker image [here](https://drive.google.com/file/d/1y2VrQ6zLwjj_E1R-Rwrc3tzCGA9SKIfu/view?usp=sharing)
+2. Open command prompt in the directory where the .tar docker image is stored
+3. Load docker image: ```docker load -i paper-paws-poc.tar```
+4. Run docker image: ```docker run --name paper-paws-app -p 8501:8501 paper-paws-poc:1.0.0```
 
 ### Option 4: Docker (Advanced)
-1️⃣ Clone the repository: ```git clone https://github.com/5zyyy/paper-paws-poc.git```
-<br>
-2️⃣ Build Docker image: ```docker build -t paper-paws-poc:1.0.0 .```
-<br>
-3️⃣ Run Docker image (create container): ```docker run --name paper-paws-app -p 8501:8501 paper-paws-poc:1.0.0```
-<br>
-**Optional:** Save Docker image as .tar: ```docker save -o paper-paws-poc.tar paper-paws-poc:1.0.0```
+1. Clone the repository: ```git clone https://github.com/5zyyy/paper-paws-poc.git```
+2. Build Docker image: ```docker build -t paper-paws-poc:1.0.0 .```
+3. Run Docker image (create container): ```docker run --name paper-paws-app -p 8501:8501 paper-paws-poc:1.0.0```
+4. Save Docker image as .tar: ```docker save -o paper-paws-poc.tar paper-paws-poc:1.0.0``` (*optional*)
 
 ## 🛠️ Troubleshooting
 Common issues and solutions:
@@ -86,13 +78,10 @@ Found a bug? Please report them in our telegram [here](https://t.me/paperpawsxyz
 ## 🤝 Contributing
 We welcome contributions! Please follow these steps:
 
-1️⃣ Fork the repository
-<br>
-2️⃣ Create a new branch
-<br>
-3️⃣ Make your changes
-<br>
-4️⃣ Submit a pull request
+1. Fork the repository
+2. Create a new branch
+3. Make your changes
+4. Submit a pull request
 
 Please include a clear description with the pull request:
  - What problem does this solve?
