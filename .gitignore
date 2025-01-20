@@ -3,3 +3,11 @@
 *.ddb
 __pycache__
 *.egg-info
+# Streamlit
+.streamlit/
+
+# Build folders
+build/
+*/build/
+dist/
+*/dist/
