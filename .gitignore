@@ -6,8 +6,7 @@ __pycache__
 # Streamlit
 .streamlit/
 
-# Build folders
-build/
-*/build/
 dist/
-*/dist/
+build/
+*.exe
+*.pkg
