@@ -83,7 +83,7 @@ class QueryAPI:
 
         headers = {
             "Content-Type": "application/json",
-            "X-API-KEY": self.api_key
+            "Authorization": "Bearer " + self.api_key
         }
 
         response = requests.post(
@@ -170,7 +170,7 @@ class QueryAPI:
 
         headers = {
             "Content-Type": "application/json",
-            "X-API-KEY": self.api_key
+            "Authorization": "Bearer " + self.api_key
         }
 
         response = requests.post(
