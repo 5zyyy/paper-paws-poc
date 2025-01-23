@@ -33,8 +33,12 @@ A paper trading simulator for meme coins on the Solana blockchain. Practice trad
 
 ## 🔑 API Key Setup
 1. Sign up at [BitQuery](https://bitquery.io/)
-2. In BitQuery dashboard, navigate to Account > API V1 > Api-Keys
-3. Copy and paste your API key in the settings page of the app
+2. In BitQuery dashboard, navigate to Account > API V2 > Applications
+3. Click on 'New Application'
+4. Enter the any name for the application (e.g. 'Paper Paws') and select an access token lifespan (Recommended: 3 months)
+5. Click on 'Manage'
+6. Click on 'Generate New Token'
+7. Copy and paste your 'Access token' in the settings page of the app
 
 ## ⚡ Quick Start
 1. Install and run the app using one of the installation options [below](#️-installation)
@@ -52,7 +56,7 @@ A paper trading simulator for meme coins on the Solana blockchain. Practice trad
 3. Run the app: ```streamlit run .\src\app.py```  
 
 ### Option 3: Docker (Simple)
-1. Download .tar docker image [here](https://drive.google.com/file/d/1y2VrQ6zLwjj_E1R-Rwrc3tzCGA9SKIfu/view?usp=sharing)
+1. Download .tar docker image [here](https://drive.google.com/file/d/1OHjZ26KbXB4x794edk-mnm-hBk7hYq9H/view?usp=sharing)
 2. Open command prompt in the directory where the .tar docker image is stored
 3. Load docker image: ```docker load -i paper-paws-poc.tar```
 4. Run docker image: ```docker run --name paper-paws-app -p 8501:8501 paper-paws-poc:1.0.0```
@@ -63,7 +67,7 @@ A paper trading simulator for meme coins on the Solana blockchain. Practice trad
 3. Run Docker image (create container): ```docker run --name paper-paws-app -p 8501:8501 paper-paws-poc:1.0.0```
 4. Save Docker image as .tar: ```docker save -o paper-paws-poc.tar paper-paws-poc:1.0.0``` (*optional*)
 
-## 🛠️ Troubleshooting
+## ⚠️ Troubleshooting
 Common issues and solutions:
 - **Database Error**: Reset database in settings
 - **Docker Port Error**: Make sure port 8501 is not in use

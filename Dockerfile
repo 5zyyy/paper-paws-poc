@@ -6,9 +6,12 @@ LABEL description="Paper trading for meme coins. POC by Paperpaws."
 
 WORKDIR /app
 
-COPY . .
+COPY .streamlit .streamlit
+COPY requirements.txt .
+COPY setup.py .
+COPY src src
 
-RUN pip install -e .
+RUN pip install .
 
 EXPOSE 8501
 
