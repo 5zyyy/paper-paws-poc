@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-from helpers.database_helper import fetch_data, fetch_data_paginated
+from helpers.database_helper import fetch_data
 import pandas as pd
 from helpers.helpers import format_positions_df
 
@@ -41,42 +41,15 @@ if os.path.exists('trades.ddb'):
 
     # Display positions
     st.subheader("Opened Positions", anchor=False)
-    opened_df = fetch_data("SELECT * FROM positions WHERE remaining > 0 ORDER BY date DESC, time DESC")
+    opened_df = fetch_data("SELECT * FROM positions WHERE remaining > 0")
     if opened_df.empty:
         st.info("No opened positions found")
     else:
-        st.dataframe(format_positions_df(opened_df), hide_index=True)
+        st.dataframe(format_positions_df(opened_df))
 
     st.subheader("Closed Positions", anchor=False)
-    total_closed = fetch_data("SELECT COUNT(*) as count FROM positions WHERE remaining = 0").iloc[0]['count']
-    
-    if total_closed == 0:
+    closed_df = fetch_data("SELECT * FROM positions WHERE remaining = 0")
+    if closed_df.empty:
         st.info("No closed positions found")
     else:
-        if 'closed_positions_page_number' not in st.session_state:
-            st.session_state.closed_positions_page_number = 1
-
-        df, total_pages, error = fetch_data_paginated(
-            "SELECT * FROM positions WHERE remaining = 0", 
-            st.session_state.closed_positions_page_number, 
-            total_closed,
-            'closed_positions'
-        )
-        
-        if df is not None:
-            st.dataframe(format_positions_df(df), hide_index=True)
-        
-        if error:
-            st.rerun()
-        else:
-            col1, col2, col3 = st.columns([1, 1, 1])
-            with col1:
-                if st.button("⬅️ Previous", disabled=(st.session_state.closed_positions_page_number == 1)):
-                    st.session_state.closed_positions_page_number -= 1
-                    st.rerun()
-            with col2:
-                st.write(f"Page {st.session_state.closed_positions_page_number} of {total_pages}")
-            with col3:
-                if st.button("Next ➡️", disabled=(st.session_state.closed_positions_page_number == total_pages)):
-                    st.session_state.closed_positions_page_number += 1
-                    st.rerun()
+        st.dataframe(format_positions_df(closed_df))
