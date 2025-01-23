@@ -44,7 +44,7 @@ with st.sidebar:
     st.title("🐾 Paper Paws POC", anchor=False)
     st.write("Version: 1.0.0")
     st.write(
-        "Made by [awl](https://x.com/5zy12), [ryan](https://x.com), [mark](https://x.com)",
+        "Made by awl, ryan, mark",
         unsafe_allow_html=True
     )
 

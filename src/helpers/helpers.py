@@ -1,11 +1,28 @@
 import yaml
 import pandas as pd
+import streamlit as st
 
 def write_yaml(path, content):
+    """
+    Write content to a YAML file.
+
+    Parameters:
+    - path (str): The file path to write the YAML content.
+    - content (dict): The content to write to the YAML file.
+    """
     with open(path, 'w') as file:
         yaml.dump(content, file)
 
 def format_number(value):
+    """
+    Format a number into a human-readable string with suffixes.
+
+    Parameters:
+    - value (float): The number to format.
+
+    Returns:
+    - str: Formatted number with suffix.
+    """
     if pd.isna(value):
         return value
     
@@ -25,6 +42,15 @@ def format_number(value):
         return f"{sign}{abs_value:.2f}"
 
 def format_positions_df(df):
+    """
+    Format a DataFrame of positions for display.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame to format.
+
+    Returns:
+    - pd.DataFrame: Formatted DataFrame.
+    """
     df = df.drop(['total_token_amt', 'remaining_token_amt'], axis=1)
     df['date'] = pd.to_datetime(df['date']).dt.date
     
@@ -54,6 +80,15 @@ def format_positions_df(df):
     return df
 
 def format_transactions_df(df):
+    """
+    Format a DataFrame of transactions for display.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame to format.
+
+    Returns:
+    - pd.DataFrame: Formatted DataFrame.
+    """
     df['date'] = pd.to_datetime(df['date']).dt.date
     
     columns_to_format = ['market_cap', 'token_amt']
@@ -75,3 +110,16 @@ def format_transactions_df(df):
     })
     
     return df
+
+@st.cache_data
+def convert_df(df):
+    """
+    Convert a DataFrame to CSV format for downloading.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame to convert to CSV.
+
+    Returns:
+    - bytes: UTF-8 encoded CSV data ready for download.
+    """
+    return df.to_csv(index=False).encode("utf-8")
