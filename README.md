@@ -1,7 +1,3 @@
-# 🐾 Paper Paws (POC)
-
-A paper trading simulator for meme coins on the Solana blockchain. Practice trading without risking real assets.
-
 📚 **[Visit our website](https://www.paperpaws.xyz/) for more details on the project!**
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
