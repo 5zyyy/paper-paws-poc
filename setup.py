@@ -14,5 +14,5 @@ setup(
         "streamlit-extras==0.5.0",
         "duckdb==1.1.3",
     ],
-    python_requires=">=3.6",
+    python_requires=">=3.9",
 )

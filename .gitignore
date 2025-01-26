@@ -3,10 +3,8 @@
 *.ddb
 __pycache__
 *.egg-info
-# Streamlit
-.streamlit/
-
 dist/
 build/
 *.exe
 *.pkg
+*.spec
