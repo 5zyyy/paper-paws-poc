@@ -14,9 +14,8 @@ A paper trading simulator for meme coins on the Solana blockchain. Practice trad
 - [Quick Start](#-quick-start)
 - [Installation](#️-installation)
   - [Option 1: .exe installation](#option-1-exe-installation-recommended)
-  - [Option 2: Direct Installation](#option-2-direct-installation)
-  - [Option 3: Docker (Simple)](#option-3-docker-simple)
-  - [Option 4: Docker (Advanced)](#option-4-docker-advanced)
+  - [Option 3: Docker (Simple)](#option-2-docker-simple)
+  - [Option 4: Docker (Advanced)](#option-3-docker-advanced)
 - [Troubleshooting](#️-troubleshooting)
 - [Bug Reports](#-bug-reports)
 - [Contributing](#-contributing)
@@ -48,23 +47,27 @@ A paper trading simulator for meme coins on the Solana blockchain. Practice trad
 
 ## 🛠️ Installation
 ### Option 1: .exe installation (recommended)
-*Add .exe installation steps here*
+1. Download the .exe [here](https://drive.google.com/file/d/1usJ8up2veTvVKGGiaT167ap7y0fqhN4Y/view?usp=drive_link)
+2. Extract the .zip file
+3. Run paperpaws.exe
+4. **NOTE: Keep the .exe file in a folder as it creates settings and database files**  
 
-### Option 2: Direct Installation
-1. Clone the repository: ```git clone https://github.com/5zyyy/paper-paws-poc.git```
-2. Install dependencies: ```pip install -e .```
-3. Run the app: ```streamlit run .\src\app.py```  
-
-### Option 3: Docker (Simple)
+### Option 2: Docker (Simple)
 1. Open command prompt
 2. Pull docker image: ```docker pull paperpaws/paper-paws-poc:1.0.0```
 3. Run docker image: ```docker run --name paper-paws-app -p 8501:8501 paperpaws/paper-paws-poc:1.0.0```
 
-### Option 4: Docker (Advanced)
+### Option 3: Docker (Advanced)
 1. Clone the repository: ```git clone https://github.com/5zyyy/paper-paws-poc.git```
 2. Build Docker image: ```docker build -t paper-paws-poc:1.0.0 .```
 3. Run Docker image (create container): ```docker run --name paper-paws-app -p 8501:8501 paper-paws-poc:1.0.0```
 4. Save Docker image as .tar: ```docker save -o paper-paws-poc.tar paper-paws-poc:1.0.0``` (*optional*)
+
+## Project Set Up
+1. Clone the repository: ```git clone https://github.com/5zyyy/paper-paws-poc.git```
+2. Install dependencies: ```pip install -e .``` and ```pip install -r requirements.txt```
+3. Run the app: ```streamlit run .\src\app.py```
+4. Compile .exe: ```python build.py```
 
 ## ⚠️ Troubleshooting
 Common issues and solutions:
@@ -99,6 +102,7 @@ Please include a clear description with the pull request:
 - DuckDB
 - PyYAML
 - Streamlit Extras
+- PyInstaller
 
 ## 📝 License
 Modified MIT License with Repository and Commercial Restrictions
