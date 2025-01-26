@@ -8,6 +8,7 @@ streamlit_path = os.path.dirname(streamlit.__file__)
 
 # Ensure paths use correct separators
 src_path = os.path.join(os.getcwd(), 'src')
+streamlit_config_path = os.path.join(os.getcwd(), '.streamlit')
 
 PyInstaller.__main__.run([
     'run.py',
@@ -15,6 +16,7 @@ PyInstaller.__main__.run([
     '--onefile',
     '--clean',
     '--add-data', f'{streamlit_path}{os.pathsep}streamlit',
+    '--add-data', f'{streamlit_config_path}{os.pathsep}.streamlit',
     # Add metadata
     '--copy-metadata', 'streamlit',
     '--copy-metadata', 'streamlit-extras',

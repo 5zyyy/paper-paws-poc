@@ -2,6 +2,7 @@ import streamlit
 import streamlit.web.cli as stcli
 import os
 import sys
+import shutil
 
 
 def resolve_path(path):
@@ -18,6 +19,18 @@ def resolve_path(path):
 
 
 if __name__ == "__main__":
+    # Get the user's home directory
+    home_dir = os.path.expanduser('~')
+    
+    # Create .streamlit directory in user's home if it doesn't exist
+    user_streamlit_dir = os.path.join(home_dir, '.streamlit')
+    os.makedirs(user_streamlit_dir, exist_ok=True)
+    
+    # Copy config.toml from bundled .streamlit to user's .streamlit directory
+    bundled_config = resolve_path(os.path.join('.streamlit', 'config.toml'))
+    user_config = os.path.join(user_streamlit_dir, 'config.toml')
+    shutil.copy2(bundled_config, user_config)
+    
     sys.argv = [
         "streamlit",
         "run",
