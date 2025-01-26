@@ -246,7 +246,9 @@ class SubmitOrder:
             sell_percentage = float(sell_percentage.strip('%'))
         if sell_percentage <= 0:
             return 'Sell percentage not entered!'
-        
+        if contract_address is None:
+            return 'Please select a token to sell!'
+
         contract_address = contract_address.split(' - ')[1]
         df = fetch_data(f"SELECT * FROM positions WHERE contract_address = '{contract_address}' AND remaining > 0")
 
