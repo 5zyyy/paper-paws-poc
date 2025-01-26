@@ -63,7 +63,7 @@ A paper trading simulator for meme coins on the Solana blockchain. Practice trad
 3. Run Docker image (create container): ```docker run --name paper-paws-app -p 8501:8501 paper-paws-poc:1.0.0```
 4. Save Docker image as .tar: ```docker save -o paper-paws-poc.tar paper-paws-poc:1.0.0``` (*optional*)
 
-## Project Set Up
+## 🔌 Project Set Up
 1. Clone the repository: ```git clone https://github.com/5zyyy/paper-paws-poc.git```
 2. Install dependencies: ```pip install -e .``` and ```pip install -r requirements.txt```
 3. Run the app: ```streamlit run .\src\app.py```
