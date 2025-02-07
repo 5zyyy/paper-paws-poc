@@ -47,7 +47,7 @@ A paper trading simulator for meme coins on the Solana blockchain. Practice trad
 
 ## 🛠️ Installation
 ### Option 1: .exe installation (recommended)
-1. Download the .exe [here](https://drive.google.com/file/d/1usJ8up2veTvVKGGiaT167ap7y0fqhN4Y/view?usp=drive_link)
+1. Download the .exe [here](https://drive.google.com/file/d/1zDS6xK3oOeq9rELP7JFryzbS0SPEPYco/view?usp=sharing)
 2. Extract the .zip file
 3. Run paperpaws.exe
 4. **NOTE: Keep the .exe file in a folder as it creates settings and database files**  

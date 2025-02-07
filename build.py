@@ -15,6 +15,7 @@ PyInstaller.__main__.run([
     '--name=paperpaws',
     '--onefile',
     '--clean',
+    '--icon=icon.ico',
     '--add-data', f'{streamlit_path}{os.pathsep}streamlit',
     '--add-data', f'{streamlit_config_path}{os.pathsep}.streamlit',
     # Add metadata
