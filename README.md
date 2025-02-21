@@ -31,12 +31,12 @@ A paper trading simulator for meme coins on the Solana blockchain. Practice trad
 - Docker support
 
 ## 🔑 API Key Setup
-1. Sign up at [BitQuery](https://bitquery.io/)
-2. In BitQuery dashboard, navigate to Account > API V2 > Applications
+1. Sign up at [BitQuery](https://account.bitquery.io/auth/signup?utm_source=navigation_button&utm_medium=website&utm_campaign=start_building_cta)
+2. In BitQuery dashboard, navigate to 'Account' > 'Applications'
 3. Click on 'New Application'
 4. Enter the any name for the application (e.g. 'Paper Paws') and select an access token lifespan (Recommended: 3 months)
-5. Click on 'Manage'
-6. Click on 'Generate New Token'
+5. Navigate to 'Access Tokens'
+6. Select the name of the application you just created and click on 'Generate Access Token'
 7. Copy and paste your 'Access token' in the settings page of the app
 
 ## ⚡ Quick Start
