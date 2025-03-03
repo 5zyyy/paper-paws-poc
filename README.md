@@ -18,7 +18,6 @@ A paper trading simulator for meme coins on the Solana blockchain. Practice trad
   - [Option 4: Docker (Advanced)](#option-3-docker-advanced)
 - [Troubleshooting](#️-troubleshooting)
 - [Bug Reports](#-bug-reports)
-- [Contributing](#-contributing)
 - [Dependencies](#-dependencies)
 - [License](#-license)
 
