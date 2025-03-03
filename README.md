@@ -81,20 +81,6 @@ Found a bug? Please report them in our telegram [here](https://t.me/paperpawsxyz
 - Steps to reproduce
 - Expected vs actual behavior
 
-## 🤝 Contributing
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create a new branch
-3. Make your changes
-4. Submit a pull request
-
-Please include a clear description with the pull request:
- - What problem does this solve?
- - What changes were made?
- - How to test these changes?
- - Screenshots (if applicable)
-
 ## 📦 Dependencies
 - Python 3.13+
 - Streamlit
