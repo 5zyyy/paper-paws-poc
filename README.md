@@ -2,8 +2,6 @@
 
 A paper trading simulator for meme coins on the Solana blockchain. Practice trading without risking real assets.
 
-📚 **[Visit our website](https://www.paperpaws.xyz/) for more details on the project!**
-
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![Python](https://img.shields.io/badge/python-3.13-green)
 ![Streamlit](https://img.shields.io/badge/streamlit-1.41.1-red)
@@ -17,7 +15,6 @@ A paper trading simulator for meme coins on the Solana blockchain. Practice trad
   - [Option 3: Docker (Simple)](#option-2-docker-simple)
   - [Option 4: Docker (Advanced)](#option-3-docker-advanced)
 - [Troubleshooting](#️-troubleshooting)
-- [Bug Reports](#-bug-reports)
 - [Dependencies](#-dependencies)
 - [License](#-license)
 
@@ -73,12 +70,6 @@ Common issues and solutions:
 - **Database Error**: Reset database in settings
 - **Docker Port Error**: Make sure port 8501 is not in use
 - **API Error**: Verify your BitQuery API key in settings
-
-## 🐛 Bug Reports
-Found a bug? Please report them in our telegram [here](https://t.me/paperpawsxyz) or open an issue with:
-- Description of the problem
-- Steps to reproduce
-- Expected vs actual behavior
 
 ## 📦 Dependencies
 - Python 3.13+
