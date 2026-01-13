@@ -2,6 +2,8 @@
 
 A paper trading simulator for meme coins on the Solana blockchain. Practice trading without risking real assets.
 
+**NOTE: This project is not being maintained or kept up-to-date!**
+
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![Python](https://img.shields.io/badge/python-3.13-green)
 ![Streamlit](https://img.shields.io/badge/streamlit-1.41.1-red)
